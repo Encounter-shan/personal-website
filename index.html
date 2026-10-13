@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文一行 · 个人主页 | 网络工程(国际学院)</title>
+<meta name="description" content="文一行 - 网络工程(国际学院)学生,蓝桥杯备赛中,Java 俱乐部申请自我介绍。">
+<style>
+/* ============================================================
+   1. 设计令牌(CSS 变量)—— 主题切换的核心
+   ============================================================ */
+:root{
+  --blue:#2b6cb0;
+  --blue-deep:#1a4a7a;
+  --teal:#0f9b8e;
+  --teal-deep:#0b7a70;
+  --bg:#f7fafc;
+  --bg-alt:#edf2f7;
+  --card:#ffffff;
+  --text:#1a2332;
+  --text-soft:#4a5568;
+  --text-mute:#718096;
+  --border:#e2e8f0;
+  --border-strong:#cbd5e0;
+  --accent-grad:linear-gradient(135deg,#2b6cb0 0%,#0f9b8e 100%);
+  --shadow-sm:0 1px 3px rgba(26,35,50,.06),0 1px 2px rgba(26,35,50,.04);
+  --shadow-md:0 4px 16px rgba(26,35,50,.08);
+  --shadow-lg:0 12px 32px rgba(26,35,50,.10);
+  --radius:14px;
+  --radius-sm:8px;
+  --maxw:1080px;
+  --nav-h:64px;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+/* 暗色主题:只覆盖颜色类变量,布局完全复用 */
+html[data-theme="dark"]{
+  --blue:#63b3ed;
+  --blue-deep:#90cdf4;
+  --teal:#4fd1c5;
+  --teal-deep:#81e6d9;
+  --bg:#0f1720;
+  --bg-alt:#151f2b;
+  --card:#1a2532;
+  --text:#e8eef5;
+  --text-soft:#b4c2d1;
+  --text-mute:#8496a8;
+  --border:#2a3846;
+  --border-strong:#3a4a5a;
+  --accent-grad:linear-gradient(135deg,#63b3ed 0%,#4fd1c5 100%);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:0 4px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.45);
+}
+html[data-theme="dark"] .hero{background:radial-gradient(1200px 500px at 15% -10%,rgba(79,209,197,.10),transparent 60%),radial-gradient(1000px 460px at 88% 0%,rgba(99,179,237,.10),transparent 60%);}
+html[data-theme="dark"] .proj-thumb{background:linear-gradient(135deg,rgba(99,179,237,.10),rgba(79,209,197,.10));}
+html[data-theme="dark"] .avatar-svg circle{fill:#1a2532;}
+
+/* ============================================================
+   2. 基础重置与排版
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 16px);}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif;
+  font-size:16px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  transition:background .35s var(--ease),color .35s var(--ease);
+}
+h1,h2,h3,h4{margin:0;line-height:1.3;font-weight:700;letter-spacing:-.01em;}
+p{margin:0;}
+a{color:var(--blue);text-decoration:none;transition:color .2s;}
+a:hover{color:var(--teal);}
+ul{margin:0;padding:0;list-style:none;}
+code,.mono{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;}
+::selection{background:rgba(15,155,142,.22);}
+
+/* 容器 */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+section{padding:88px 0;position:relative;}
+section:nth-of-type(even){background:var(--bg-alt);}
+
+/* 章节标题:带小竖条 + 英文副标 */
+.sec-head{margin-bottom:44px;}
+.sec-head h2{
+  font-size:30px;display:flex;align-items:center;gap:12px;
+}
+.sec-head h2::before{
+  content:"";width:5px;height:26px;border-radius:3px;
+  background:var(--accent-grad);flex:none;
+}
+.sec-head .en{
+  display:block;margin:6px 0 0 17px;
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text-mute);font-weight:600;
+}
+
+/* ============================================================
+   3. 顶部导航
+   ============================================================ */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0;
+  background:var(--accent-grad);z-index:120;
+  transition:width .1s linear;
+}
+nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:110;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s,background .35s;
+}
+@supports not (background:color-mix(in srgb,red,blue)){
+  nav{background:var(--bg);}
+}
+nav.scrolled{border-bottom-color:var(--border);}
+.nav-inner{
+  max-width:var(--maxw);margin:0 auto;padding:0 24px;height:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;color:var(--text);flex:none;}
+.brand:hover{color:var(--blue);}
+.brand-mark{
+  width:30px;height:30px;border-radius:9px;background:var(--accent-grad);
+  color:#fff;display:grid;place-items:center;font-size:14px;font-weight:700;
+  box-shadow:var(--shadow-sm);
+}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links a{
+  padding:8px 13px;border-radius:var(--radius-sm);font-size:14.5px;
+  color:var(--text-soft);font-weight:500;transition:all .2s;white-space:nowrap;
+}
+.nav-links a:hover{color:var(--blue);background:rgba(43,108,176,.08);}
+.nav-links a.active{color:var(--blue);background:rgba(43,108,176,.11);font-weight:600;}
+html[data-theme="dark"] .nav-links a:hover{background:rgba(99,179,237,.12);}
+html[data-theme="dark"] .nav-links a.active{background:rgba(99,179,237,.16);}
+.nav-right{display:flex;align-items:center;gap:10px;flex:none;}
+
+/* 主题切换按钮 */
+#themeBtn{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--border);
+  background:var(--card);color:var(--text-soft);cursor:pointer;
+  display:grid;place-items:center;transition:all .25s;flex:none;
+}
+#themeBtn:hover{border-color:var(--teal);color:var(--teal);transform:rotate(18deg);}
+#themeBtn svg{width:18px;height:18px;}
+html[data-theme="light"] .icon-moon{display:block;}
+html[data-theme="light"] .icon-sun{display:none;}
+html[data-theme="dark"] .icon-moon{display:none;}
+html[data-theme="dark"] .icon-sun{display:block;}
+
+/* 汉堡菜单 */
+#menuBtn{
+  display:none;width:38px;height:38px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--card);cursor:pointer;
+  padding:0;place-items:center;
+}
+#menuBtn span{display:block;width:17px;height:2px;background:var(--text-soft);border-radius:2px;position:relative;transition:.25s;}
+#menuBtn span::before,#menuBtn span::after{
+  content:"";position:absolute;left:0;width:17px;height:2px;background:var(--text-soft);border-radius:2px;transition:.25s;
+}
+#menuBtn span::before{top:-5.5px;}
+#menuBtn span::after{top:5.5px;}
+#menuBtn.open span{background:transparent;}
+#menuBtn.open span::before{top:0;transform:rotate(45deg);}
+#menuBtn.open span::after{top:0;transform:rotate(-45deg);}
+
+/* ============================================================
+   4. Hero 首屏
+   ============================================================ */
+.hero{
+  padding:calc(var(--nav-h) + 76px) 0 88px;
+  background:
+    radial-gradient(1200px 500px at 15% -10%,rgba(15,155,142,.10),transparent 60%),
+    radial-gradient(1000px 460px at 88% 0%,rgba(43,108,176,.10),transparent 60%);
+  overflow:hidden;
+}
+/* 细网格底纹,增加技术感 */
+.hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(700px 380px at 30% 30%,#000,transparent 75%);
+  mask-image:radial-gradient(700px 380px at 30% 30%,#000,transparent 75%);
+}
+.hero .wrap{position:relative;z-index:1;}
+.hero-grid{display:grid;grid-template-columns:1fr auto;gap:56px;align-items:center;}
+
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:100px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:13.5px;color:var(--text-soft);font-weight:500;
+  box-shadow:var(--shadow-sm);margin-bottom:22px;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--teal);position:relative;flex:none;}
+.dot::after{
+  content:"";position:absolute;inset:-3px;border-radius:50%;
+  border:2px solid var(--teal);opacity:.6;animation:pulse 2s infinite;
+}
+@keyframes pulse{0%{transform:scale(.7);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+
+.hero h1{
+  font-size:clamp(34px,5.4vw,54px);line-height:1.14;letter-spacing:-.02em;margin-bottom:20px;
+}
+.grad{
+  background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;
+  color:transparent;
+}
+/* 打字机 */
+.typer-line{
+  font-size:clamp(17px,2.2vw,21px);font-weight:600;color:var(--text-soft);
+  min-height:1.9em;display:flex;align-items:center;flex-wrap:wrap;gap:2px;
+}
+.typer-prefix{color:var(--text-mute);font-weight:500;}
+#typer{color:var(--teal);font-weight:700;}
+.caret{
+  display:inline-block;width:2px;height:1.05em;background:var(--teal);
+  margin-left:2px;vertical-align:-2px;animation:blink 1s step-end infinite;
+}
+@keyframes blink{50%{opacity:0}}
+.hero-desc{
+  margin:22px 0 30px;max-width:520px;color:var(--text-soft);font-size:16.5px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:var(--radius-sm);
+  font-size:15px;font-weight:600;cursor:pointer;
+  border:1px solid transparent;transition:all .22s;white-space:nowrap;
+}
+.btn-primary{background:var(--accent-grad);color:#fff;box-shadow:var(--shadow-md);}
+.btn-primary:hover{color:#fff;transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.btn-ghost{background:var(--card);color:var(--text);border-color:var(--border-strong);}
+.btn-ghost:hover{color:var(--blue);border-color:var(--blue);transform:translateY(-2px);}
+.btn svg{width:16px;height:16px;}
+
+/* 头像徽标 */
+.avatar-wrap{position:relative;width:236px;height:236px;flex:none;}
+.avatar-svg{width:100%;height:100%;display:block;}
+.avatar-svg circle{fill:#fff;}
+.avatar-ring{animation:spin 26s linear infinite;transform-origin:50% 50%;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.avatar-char{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-size:72px;font-weight:700;
+  background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  pointer-events:none;padding-bottom:4px;
+}
+.avatar-note{
+  position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  font-size:11.5px;color:var(--text-mute);letter-spacing:.08em;
+  background:var(--card);border:1px solid var(--border);border-radius:100px;
+  padding:3px 12px;white-space:nowrap;
+}
+
+/* ============================================================
+   5. 关于我
+   ============================================================ */
+.about-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:start;}
+.about-text p{color:var(--text-soft);margin-bottom:16px;}
+.about-text strong{color:var(--text);font-weight:600;}
+.facts{display:grid;gap:12px;}
+.fact{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 18px;display:flex;align-items:center;gap:14px;
+  box-shadow:var(--shadow-sm);transition:transform .25s,box-shadow .25s,border-color .25s;
+}
+.fact:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--border-strong);}
+.fact-ico{
+  width:38px;height:38px;border-radius:10px;flex:none;display:grid;place-items:center;
+  background:rgba(15,155,142,.10);color:var(--teal-deep);font-size:17px;
+}
+html[data-theme="dark"] .fact-ico{background:rgba(79,209,197,.14);color:var(--teal);}
+.fact-k{font-size:12.5px;color:var(--text-mute);letter-spacing:.04em;}
+.fact-v{font-size:15px;font-weight:600;color:var(--text);}
+
+/* ============================================================
+   6. 技能
+   ============================================================ */
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px 48px;}
+.skill{margin-bottom:4px;}
+.skill-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:12px;}
+.skill-name{font-weight:600;font-size:15.5px;display:flex;align-items:center;gap:9px;}
+.tag-mini{
+  font-size:11px;padding:1px 8px;border-radius:100px;font-weight:600;
+  background:rgba(43,108,176,.10);color:var(--blue);
+}
+html[data-theme="dark"] .tag-mini{background:rgba(99,179,237,.14);}
+.skill-val{font-size:13px;color:var(--text-mute);font-variant-numeric:tabular-nums;flex:none;}
+.bar{height:8px;border-radius:100px;background:var(--bg-alt);overflow:hidden;border:1px solid var(--border);}
+html[data-theme="dark"] .bar{background:#0d151d;}
+.bar-fill{
+  height:100%;width:0;border-radius:100px;background:var(--accent-grad);
+  transition:width 1.25s var(--ease);
+}
+/* 技术标签云 */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:36px;}
+.chip{
+  padding:6px 14px;border-radius:100px;font-size:13.5px;font-weight:500;
+  background:var(--card);border:1px solid var(--border);color:var(--text-soft);
+  transition:all .22s;cursor:default;
+}
+.chip:hover{transform:translateY(-2px);border-color:var(--teal);color:var(--teal-deep);box-shadow:var(--shadow-sm);}
+html[data-theme="dark"] .chip:hover{color:var(--teal);}
+
+/* ---- 三组能力清单(替代原来的百分比技能条) ---- */
+.ability-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:22px;align-items:start;
+}
+.ability{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 24px 20px;box-shadow:var(--shadow-sm);
+  border-top:3px solid var(--border-strong);height:100%;
+  transition:transform .28s var(--ease),box-shadow .28s,border-color .28s;
+}
+.ability:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);}
+/* 两组各用一种强调色,一眼能区分状态 */
+.group-have{border-top-color:var(--teal);}
+.group-learning{border-top-color:var(--blue);}
+.ability-head{display:flex;align-items:center;gap:13px;margin-bottom:18px;}
+.ability-ico{
+  width:38px;height:38px;border-radius:11px;flex:none;
+  display:grid;place-items:center;font-size:19px;font-weight:700;
+}
+.group-have .ability-ico{background:rgba(15,155,142,.13);color:var(--teal-deep);}
+.group-learning .ability-ico{background:rgba(43,108,176,.13);color:var(--blue);}
+html[data-theme="dark"] .group-have .ability-ico{background:rgba(79,209,197,.16);color:var(--teal);}
+html[data-theme="dark"] .group-learning .ability-ico{background:rgba(99,179,237,.16);color:var(--blue);}
+.ability-head h3{font-size:17.5px;margin-bottom:1px;}
+.ability-sub{font-size:12.5px;color:var(--text-mute);}
+.ability-list{display:grid;gap:11px;}
+.ability-list li{
+  position:relative;padding-left:19px;
+  font-size:14.5px;color:var(--text-soft);line-height:1.65;
+}
+.ability-list li::before{
+  content:"";position:absolute;left:3px;top:.62em;
+  width:6px;height:6px;border-radius:50%;background:var(--border-strong);
+}
+.group-have .ability-list li::before{background:var(--teal);}
+.group-learning .ability-list li::before{background:var(--blue);opacity:.75;}
+.ability-list .mono{
+  font-size:13px;background:var(--bg-alt);border:1px solid var(--border);
+  border-radius:5px;padding:1px 6px;color:var(--text);
+}
+/* 说明框 */
+.note{
+  margin-top:30px;padding:20px 24px;border-radius:var(--radius);
+  background:var(--card);border:1px solid var(--border);border-left:4px solid var(--teal);
+  color:var(--text-soft);font-size:14.5px;line-height:1.75;box-shadow:var(--shadow-sm);
+}
+.note strong{color:var(--text);}
+
+/* ============================================================
+   7. 项目 / 经历 卡片
+   ============================================================ */
+
+/* ---- 重点在研项目(比普通卡片更突出) ---- */
+.flagship{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:30px 32px;margin-bottom:30px;box-shadow:var(--shadow-md);
+  border-left:5px solid var(--teal);position:relative;overflow:hidden;
+}
+.flagship::after{
+  content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;
+  border-radius:50%;background:var(--accent-grad);opacity:.05;pointer-events:none;
+}
+.flagship-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.flag-badge{
+  font-size:12px;font-weight:700;letter-spacing:.06em;
+  padding:4px 12px;border-radius:100px;color:#fff;background:var(--accent-grad);
+}
+.flag-date{
+  font-size:13px;color:var(--text-mute);font-weight:600;
+  padding:4px 12px;border-radius:100px;background:var(--bg-alt);border:1px solid var(--border);
+}
+.flagship h3{font-size:clamp(19px,2.6vw,24px);margin-bottom:18px;line-height:1.35;}
+.flag-meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  gap:14px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px dashed var(--border-strong);
+}
+.flag-k{font-size:12px;color:var(--text-mute);letter-spacing:.04em;margin-bottom:2px;}
+.flag-v{font-size:14.5px;font-weight:600;color:var(--text);}
+.flag-desc{color:var(--text-soft);font-size:15px;line-height:1.8;}
+.flag-desc strong{color:var(--text);}
+.flag-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.flag-tags span{
+  font-size:12.5px;padding:4px 12px;border-radius:7px;font-weight:500;
+  background:rgba(15,155,142,.10);color:var(--teal-deep);border:1px solid transparent;
+}
+html[data-theme="dark"] .flag-tags span{background:rgba(79,209,197,.14);color:var(--teal);}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(288px,1fr));gap:24px;}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow-sm);
+  transition:transform .28s var(--ease),box-shadow .28s,border-color .28s;
+  display:flex;flex-direction:column;
+}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:var(--border-strong);}
+.proj-thumb{
+  height:118px;background:linear-gradient(135deg,rgba(43,108,176,.09),rgba(15,155,142,.09));
+  display:grid;place-items:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;
+}
+.proj-thumb .mono{
+  font-size:13px;color:var(--text-mute);letter-spacing:.06em;
+  background:var(--card);border:1px solid var(--border);border-radius:6px;padding:5px 12px;
+}
+.card-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column;}
+.card h3{font-size:18px;margin-bottom:9px;}
+.card p{color:var(--text-soft);font-size:14.5px;flex:1;}
+.card-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;}
+.card-tags span{
+  font-size:12px;padding:3px 10px;border-radius:6px;font-weight:500;
+  background:var(--bg-alt);color:var(--text-soft);border:1px solid var(--border);
+}
+
+/* ============================================================
+   8. 备赛时间线
+   ============================================================ */
+.timeline{position:relative;padding-left:30px;}
+.timeline::before{
+  content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(var(--blue),var(--teal));border-radius:2px;opacity:.35;
+}
+.tl-item{position:relative;padding-bottom:30px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{
+  content:"";position:absolute;left:-30px;top:7px;width:16px;height:16px;border-radius:50%;
+  background:var(--card);border:3px solid var(--teal);box-shadow:0 0 0 4px var(--bg);
+}
+section:nth-of-type(even) .tl-item::before{box-shadow:0 0 0 4px var(--bg-alt);}
+.tl-date{font-size:13px;font-weight:700;color:var(--teal-deep);letter-spacing:.03em;}
+html[data-theme="dark"] .tl-date{color:var(--teal);}
+.tl-item h3{font-size:17px;margin:5px 0 6px;}
+.tl-item p{color:var(--text-soft);font-size:14.8px;}
+
+/* 数据条 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;margin-bottom:40px;}
+.stat{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;text-align:center;box-shadow:var(--shadow-sm);
+}
+.stat-num{
+  font-size:30px;font-weight:700;line-height:1.1;
+  background:var(--accent-grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  font-variant-numeric:tabular-nums;
+}
+.stat-lab{font-size:13px;color:var(--text-mute);margin-top:5px;}
+
+/* ============================================================
+   9. 联系
+   ============================================================ */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;}
+.contact-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px;display:flex;align-items:center;gap:14px;
+  box-shadow:var(--shadow-sm);transition:all .25s;
+}
+.contact-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--teal);}
+.contact-ico{
+  width:42px;height:42px;border-radius:11px;flex:none;display:grid;place-items:center;
+  background:var(--accent-grad);color:#fff;font-size:15px;font-weight:700;
+}
+/* Gitee 卡片:用深色图标区分 */
+.contact-ico.gitee{background:#c71d23;font-size:13px;letter-spacing:.02em;}
+.contact-k{font-size:12.5px;color:var(--text-mute);}
+.contact-v{font-size:15px;font-weight:600;color:var(--text);word-break:break-all;}
+
+/* ============================================================
+   10. 页脚
+   ============================================================ */
+footer{
+  padding:34px 0;border-top:1px solid var(--border);
+  background:var(--bg-alt);text-align:center;color:var(--text-mute);font-size:13.5px;
+}
+footer .mono{font-size:12.5px;color:var(--text-mute);opacity:.85;}
+.to-top{
+  position:fixed;right:22px;bottom:22px;z-index:100;
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--border);
+  background:var(--card);color:var(--text-soft);cursor:pointer;
+  display:grid;place-items:center;box-shadow:var(--shadow-md);
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:all .3s;
+}
+.to-top.show{opacity:1;visibility:visible;transform:translateY(0);}
+.to-top:hover{color:var(--teal);border-color:var(--teal);}
+
+/* ============================================================
+   11. 滚动进场动画
+   ============================================================ */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+.reveal.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  html{scroll-behavior:auto;}
+  .avatar-ring,.dot::after,.caret{animation:none;}
+}
+
+/* ============================================================
+   12. 响应式
+   ============================================================ */
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:36px;}
+  .avatar-wrap{width:180px;height:180px;order:-1;}
+  .avatar-char{font-size:56px;}
+  .about-grid{grid-template-columns:1fr;gap:32px;}
+  .skills-grid{grid-template-columns:1fr;gap:22px;}
+  section{padding:66px 0;}
+  .sec-head h2{font-size:26px;}
+}
+@media (max-width:720px){
+  .nav-links{
+    position:fixed;top:var(--nav-h);left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:2px;
+    background:var(--bg);border-bottom:1px solid var(--border);
+    padding:12px 18px 18px;box-shadow:var(--shadow-md);
+    transform:translateY(-14px);opacity:0;visibility:hidden;transition:all .25s var(--ease);
+  }
+  .nav-links.open{transform:none;opacity:1;visibility:visible;}
+  .nav-links a{padding:11px 14px;font-size:15.5px;}
+  #menuBtn{display:grid;}
+  .hero{padding:calc(var(--nav-h) + 52px) 0 64px;}
+  .hero-btns .btn{flex:1;justify-content:center;}
+  .wrap{padding:0 18px;}
+  .stat-num{font-size:26px;}
+  .timeline{padding-left:26px;}
+  .tl-item::before{left:-26px;}
+}
+/* 打印/导出 PDF 时的样子(交材料可能用得上) */
+@media print{
+  nav,#progress,.to-top,.hero-btns{display:none!important;}
+  body{background:#fff;color:#000;font-size:12pt;}
+  section{padding:18px 0;break-inside:avoid;}
+  .card,.fact,.stat,.contact-card{box-shadow:none;border-color:#ccc;}
+  .reveal{opacity:1!important;transform:none!important;}
+  .bar-fill{transition:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部阅读进度条 -->
+<div id="progress"></div>
+
+<!-- ===================== 导航 ===================== -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark">文</span>
+      <span>文一行</span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#about">关于我</a>
+      <a href="#skills">技能</a>
+      <a href="#projects">项目</a>
+      <a href="#journey">备赛</a>
+      <a href="#contact">联系</a>
+    </div>
+
+    <div class="nav-right">
+      <button id="themeBtn" aria-label="切换明暗主题" title="切换明暗主题">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+      <button id="menuBtn" aria-label="展开导航菜单"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== 首屏 Hero ===================== -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+
+      <div>
+        <div class="badge">
+          <span class="dot"></span>
+          蓝桥杯备赛 · 工创赛在研 · 申请加入 Java 俱乐部
+        </div>
+
+        <h1>
+          你好,我是 <span class="grad">文一行</span>
+        </h1>
+
+        <!-- 打字机:标签在 JS 里配置,想改内容只改 TAGS 数组 -->
+        <div class="typer-line">
+          <span class="typer-prefix">我是一名&nbsp;</span><span id="typer"></span><span class="caret"></span>
+        </div>
+
+        <p class="hero-desc">
+          网络工程专业(国际学院)在读,目前以 <strong>C++</strong> 为主要编程语言。
+          一边为首次蓝桥杯训练算法与数据结构,一边在李鹏老师指导下
+          参与工创赛(虚拟仿真 · 智能网联汽车设计),同时开始认真学 <strong>Java</strong>。
+        </p>
+
+        <div class="hero-btns">
+          <a href="#projects" class="btn btn-primary">
+            看看我的项目
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#contact" class="btn btn-ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg>
+            联系我
+          </a>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           头像区
+           想换成真人照片:删除下面的 svg + avatar-char + avatar-note,
+           然后替换为  <img src="photo.jpg" alt="文一行"
+                           style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+           注意:用 file:// 双击打开时浏览器不允许读取本地图片,
+           若要在本地看到照片,需把图片转成 Base64 内联,或用本地服务器打开。
+           ============================================================ -->
+      <div class="avatar-wrap">
+        <svg class="avatar-svg" viewBox="0 0 240 240" aria-label="文一行 头像徽标">
+          <defs>
+            <linearGradient id="ag" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2b6cb0"/>
+              <stop offset="100%" stop-color="#0f9b8e"/>
+            </linearGradient>
+          </defs>
+          <circle cx="120" cy="120" r="110" fill="none" stroke="url(#ag)" stroke-width="2.5"/>
+          <g class="avatar-ring">
+            <circle cx="120" cy="120" r="102" fill="none" stroke="url(#ag)" stroke-width="1"
+                    stroke-dasharray="4 13" opacity=".75"/>
+          </g>
+          <circle cx="120" cy="120" r="88" fill="none" stroke="url(#ag)" stroke-width="1" opacity=".3"/>
+        </svg>
+        <div class="avatar-char">文</div>
+        <div class="avatar-note">NETWORK ENGINEERING</div>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- ===================== 关于我 ===================== -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>关于我</h2>
+      <span class="en">About Me</span>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          我是<strong>文一行</strong>,网络工程专业(国际学院)的学生。
+          目前我的主要编程语言是 <strong>C++</strong>,算法和数据结构的训练也围绕它展开 ——
+          从最基础的 <span class="mono">vector</span> 用法,到排序、前缀和、二分、动态规划,
+          都是一题一题做过来的。
+        </p>
+        <p>
+          我的习惯是<strong>先想清楚再动手</strong>:拿到一个问题,先看数据规模、
+          估一下复杂度能不能过,再决定用什么方法。这个习惯是被 C++ 逼出来的 ——
+          数组越界不会报错,整数除法会悄悄截断,这些坑踩过一次就记住了。
+        </p>
+        <p>
+          目前我在做两件事:一是为<strong>蓝桥杯</strong>系统训练算法,
+          二是跟着<strong>李鹏老师</strong>参与 2027 中国大学生工程实践与创新能力大赛
+          (虚拟仿真赛道 · 智能网联汽车设计),目前处于准备阶段,预计明年 4 月参加校赛。
+          前者练的是"把一个问题解对",后者练的是"在没有标准答案时把问题定义清楚" ——
+          两件事我都还在起步,但方向是清楚的。
+        </p>
+        <p>
+          我想加入 Java 俱乐部,动机很直接:<strong>我需要把 Java 真正补起来</strong>。
+          我目前会 Java 的基础语法和面向对象,但离"能独立写一个完整项目"还有距离,
+          而一个人自学最容易半途而废。我希望在一个有人一起写代码、
+          能互相看代码的环境里把这件事做完,同时也愿意在算法和刷题上帮到其他同学 ——
+          这一块是我现在确实能拿出来的东西。
+        </p>
+      </div>
+
+      <div class="facts reveal">
+        <div class="fact">
+          <div class="fact-ico">🎓</div>
+          <div>
+            <div class="fact-k">专业 / 学院</div>
+            <div class="fact-v">网络工程 · 国际学院</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">💻</div>
+          <div>
+            <div class="fact-k">主要编程语言</div>
+            <div class="fact-v">C++(目前主力)</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">☕</div>
+          <div>
+            <div class="fact-k">正在学习</div>
+            <div class="fact-v">Java · 面向对象与集合框架</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">🏆</div>
+          <div>
+            <div class="fact-k">竞赛经历</div>
+            <div class="fact-v">蓝桥杯首次参赛(备赛中)</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">🌐</div>
+          <div>
+            <div class="fact-k">关注方向</div>
+            <div class="fact-v">算法与数据结构</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">📮</div>
+          <div>
+            <div class="fact-k">申请意向</div>
+            <div class="fact-v">Java 俱乐部 · 技术部</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 技能 ===================== -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>技能现状</h2>
+      <span class="en">Current Level &amp; Roadmap</span>
+    </div>
+
+    <p class="reveal" style="color:var(--text-soft);max-width:680px;margin:-24px 0 36px;">
+      下面是我现在能拿出手的,和正在补的。
+    </p>
+
+    <!-- 两组能力清单:改内容直接在对应 group 里增删 li 即可 -->
+    <div class="ability-grid reveal">
+
+      <!-- ============ 组 1:已具备 ============ -->
+      <div class="ability group-have">
+        <div class="ability-head">
+          <div class="ability-ico">✓</div>
+          <div>
+            <h3>已经具备</h3>
+            <div class="ability-sub">能独立写出来、讲得清</div>
+          </div>
+        </div>
+        <ul class="ability-list">
+          <li><span class="mono">C++</span> —— 目前主要编程语言,能独立完成算法题</li>
+          <li>算法与数据结构 —— 排序、查找、前缀和、二分、动态规划入门</li>
+          <li>STL 容器 —— <span class="mono">vector</span>、<span class="mono">string</span>、<span class="mono">sort/unique</span> 等</li>
+          <li>问题拆解与复杂度分析 —— 先估数据规模,再决定解法</li>
+          <li>调试与找错 —— 能发现代码里的类型、边界、越界问题</li>
+        </ul>
+      </div>
+
+      <!-- ============ 组 2:正在学 ============ -->
+      <div class="ability group-learning">
+        <div class="ability-head">
+          <div class="ability-ico">◐</div>
+          <div>
+            <h3>正在学习</h3>
+            <div class="ability-sub">在写,但还不熟练</div>
+          </div>
+        </div>
+        <ul class="ability-list">
+          <li><span class="mono">Java</span> —— 基础语法与面向对象,目标是能独立写完整项目</li>
+          <li><span class="mono">Java</span> 集合框架 —— 正在对照 C++ STL 理解两者差异</li>
+          <li>动态规划与图论 —— 备赛专题推进中,建模还不稳</li>
+          <li>蓝桥杯题型训练 —— 按专题刷题,训练限时读题速度</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- 说明框:别删,这段是加分项 -->
+    <div class="note reveal">
+      <strong>关于上面这两块:</strong>
+      左边是现在能直接用的,右边是还在学的。
+      等右边那些也能独立写出来了,我会把它们挪到左边。
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 项目 ===================== -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>项目与经历</h2>
+      <span class="en">Projects &amp; Experience</span>
+    </div>
+
+    <!-- ============================================================
+         重点:在研竞赛项目(最高优先级内容)
+         ============================================================ -->
+    <div class="flagship reveal">
+      <div class="flagship-top">
+        <span class="flag-badge">在研项目</span>
+        <span class="flag-date">预计 2026 年 4 月 · 校赛</span>
+      </div>
+
+      <h3>2027 中国大学生工程实践与创新能力大赛</h3>
+
+      <div class="flag-meta">
+        <div>
+          <div class="flag-k">赛道</div>
+          <div class="flag-v">虚拟仿真赛道</div>
+        </div>
+        <div>
+          <div class="flag-k">赛项</div>
+          <div class="flag-v">智能网联汽车设计</div>
+        </div>
+        <div>
+          <div class="flag-k">指导教师</div>
+          <div class="flag-v">李鹏 老师</div>
+        </div>
+        <div>
+          <div class="flag-k">当前阶段</div>
+          <div class="flag-v">准备阶段 · 方案设计</div>
+        </div>
+      </div>
+
+      <p class="flag-desc">
+        与团队成员在<strong>李鹏老师</strong>指导下备赛,赛道为虚拟仿真、
+        赛项为智能网联汽车设计。目前处于前期准备阶段,
+        正在做赛题理解、仿真环境搭建与整体方案设计。
+        这是我第一次参与国家级工程类竞赛,也是我第一次以团队形式
+        面对一个需要长期推进、没有标准答案的开放问题 ——
+        和刷算法题完全不同:题目边界要自己界定,方案要在讨论中收敛。
+      </p>
+
+      <div class="flag-tags">
+        <span>虚拟仿真</span>
+        <span>智能网联汽车</span>
+        <span>团队协作</span>
+        <span>工程实践</span>
+        <span>方案设计</span>
+      </div>
+    </div>
+
+    <div class="cards">
+      <article class="card reveal">
+        <div class="proj-thumb"><span class="mono">vector&lt;int&gt; scores;</span></div>
+        <div class="card-body">
+          <h3>成绩统计程序(C++ / Java 双版本)</h3>
+          <p>
+            从一道成绩统计题开始:输入 n 个成绩,输出排序结果、不同成绩个数
+            与中位数。先用 C++ 做了一版,踩过整数除法截断和迭代器用法的坑,
+            再用 Java 重写一遍对照两门语言的差异。
+          </p>
+          <div class="card-tags">
+            <span>C++</span><span>Java</span><span>vector / 集合</span><span>排序去重</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="proj-thumb"><span class="mono">dp[i] = min(dp[i-1], dp[i-2])</span></div>
+        <div class="card-body">
+          <h3>个人算法笔记与模板整理</h3>
+          <p>
+            按专题积累做题记录:排序与查找、前缀和与差分、二分答案、
+            动态规划、图论入门。每个专题留一份可复用的代码模板,
+            并记下自己踩过的坑,而不是做完就忘。
+          </p>
+          <div class="card-tags">
+            <span>算法</span><span>C++</span><span>学习笔记</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="proj-thumb"><span class="mono">&lt;html data-theme="light"&gt;</span></div>
+        <div class="card-body">
+          <h3>这个自我介绍网站</h3>
+          <p>
+            单文件 HTML + CSS + JavaScript,无任何框架与外部依赖。
+            实现了打字机个人标签、滚动进场动画、明暗主题切换与移动端适配,
+            并处理了无障碍(减少动效偏好)与打印导出样式。
+          </p>
+          <div class="card-tags">
+            <span>HTML</span><span>CSS</span><span>JavaScript</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 备赛历程 ===================== -->
+<section id="journey">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>备赛历程</h2>
+      <span class="en">Journey</span>
+    </div>
+
+    <!-- 数据卡片:下面四个数字请按你的真实情况核对 -->
+    <div class="stats reveal">
+      <div class="stat">
+        <div class="stat-num">10+</div>
+        <div class="stat-lab">每周投入的算法训练题量</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6</div>
+        <div class="stat-lab">已推进的算法专题</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1</div>
+        <div class="stat-lab">在研团队项目(工创赛)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-lab">备赛中的赛事(蓝桥杯 / 工创赛)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-lab">掌握的语言(C++ / Java 基础)</div>
+      </div>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-date">起步阶段</div>
+        <h3>从 C++ 语法到算法思维</h3>
+        <p>
+          以 C++ 为主要语言打基础:STL 容器(vector、string、sort、unique)、
+          基本输入输出与常见坑(数组越界、整数除法截断、迭代器失效)。
+          这个阶段最大的转变是:从"能写出语法正确的代码"变成"能写出复杂度可接受的代码"。
+        </p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">专项阶段</div>
+        <h3>按专题攻克算法</h3>
+        <p>
+          按专题推进:排序与查找、前缀和与差分、二分答案、动态规划、图论入门。
+          每个专题都要求自己写模板 + 总结题型特征,而不是刷完就忘。
+          同时开始把 Java 基础语法与面向对象补上。
+        </p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">进行中 · 团队项目</div>
+        <h3>加入工创赛备赛团队</h3>
+        <p>
+          在李鹏老师指导下参与 <strong>2027 中国大学生工程实践与创新能力大赛</strong>,
+          赛道为虚拟仿真、赛项为智能网联汽车设计,目前处于准备阶段。
+          这是我第一次做<strong>没有标准答案</strong>的开放题目 ——
+          和刷算法题不同,它的难点不在写代码,而在界定问题、设计方案、和队友对齐目标。
+        </p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">现在 · 备赛中</div>
+        <h3>模拟赛与查漏补缺</h3>
+        <p>
+          定期参加模拟赛,训练限时环境下的读题速度与调试能力。
+          目前主要补齐动态规划的建模能力和图论的代码实现熟练度。
+        </p>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-date">下一步 · 2026 年 4 月</div>
+        <h3>蓝桥杯首次参赛 · 工创赛校赛</h3>
+        <p>
+          两条线同期推进:蓝桥杯是我的<strong>第一次正式个人赛</strong>,
+          工创赛校赛则是<strong>第一次团队赛</strong>。
+          目标都是先把完整流程走一遍、把基础打扎实,争取拿到奖项。
+          赛后会把备赛过程中整理的题解与模板沉淀成仓库,
+          给后面入门的同学省点时间。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 联系 ===================== -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2>联系我</h2>
+      <span class="en">Get in Touch</span>
+    </div>
+
+    <p class="reveal" style="color:var(--text-soft);max-width:640px;margin-bottom:30px;">
+      如果你也在准备蓝桥杯或者工创赛,或者对算法、Java 感兴趣,
+      随时找我聊。
+    </p>
+
+    <div class="contact-grid reveal">
+      <a class="contact-card" href="mailto:1982582417@qq.com">
+        <div class="contact-ico">@</div>
+        <div>
+          <div class="contact-k">邮箱</div>
+          <div class="contact-v">1982582417@qq.com</div>
+        </div>
+      </a>
+
+      <a class="contact-card" href="https://gitee.com/Enouncter-shan" target="_blank" rel="noopener">
+        <div class="contact-ico gitee">G</div>
+        <div>
+          <div class="contact-k">Gitee</div>
+          <div class="contact-v">gitee.com/Enouncter-shan</div>
+        </div>
+      </a>
+
+      <div class="contact-card">
+        <div class="contact-ico">Q</div>
+        <div>
+          <div class="contact-k">QQ</div>
+          <div class="contact-v">1982582417</div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-ico">班</div>
+        <div>
+          <div class="contact-k">班级</div>
+          <div class="contact-v">国际网工 2501 班</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 页脚 ===================== -->
+<footer>
+  <div class="wrap">
+    <p>文一行 · 网络工程(国际学院) · 国际网工 2501 班 · 申请 Java 俱乐部</p>
+    <p class="mono" style="margin-top:6px;">&lt;/&gt; Built with HTML · CSS · JavaScript &nbsp;|&nbsp; © <span id="year"></span></p>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="回到顶部">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<script>
+/* ============================================================
+   A. 打字机效果
+   —— 想改轮播的标签,只改这个数组即可
+   ============================================================ */
+const TAGS = [
+  "网络工程专业学生",
+  "以 C++ 为主要语言",
+  "蓝桥杯首次备赛中",
+  "正在认真学 Java",
+  "会用 AI 工具协作开发"
+];
+
+(function typewriter(){
+  const el = document.getElementById('typer');
+  if(!el) return;
+  let tagIndex = 0;   // 当前第几个标签
+  let charIndex = 0;  // 当前打到第几个字
+  let deleting = false;
+
+  const TYPE_SPEED = 95;    // 打字速度(ms/字),越小越快
+  const DELETE_SPEED = 45;  // 删字速度
+  const HOLD_TIME = 1500;   // 打完后停留多久再删
+  const GAP_TIME = 350;     // 删完后停顿多久再打下一个
+
+  function tick(){
+    const word = TAGS[tagIndex];
+
+    if(!deleting){
+      // 逐字增加
+      charIndex++;
+      el.textContent = word.slice(0, charIndex);
+      if(charIndex === word.length){
+        deleting = true;
+        setTimeout(tick, HOLD_TIME);   // 打完停一下
+        return;
+      }
+      setTimeout(tick, TYPE_SPEED);
+    }else{
+      // 逐字删除
+      charIndex--;
+      el.textContent = word.slice(0, charIndex);
+      if(charIndex === 0){
+        deleting = false;
+        tagIndex = (tagIndex + 1) % TAGS.length;   // 轮到下一个标签
+        setTimeout(tick, GAP_TIME);
+        return;
+      }
+      setTimeout(tick, DELETE_SPEED);
+    }
+  }
+
+  // 若用户系统开了"减少动态效果",直接静态显示第一个标签
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){
+    el.textContent = TAGS[0];
+  }else{
+    setTimeout(tick, 400);
+  }
+})();
+
+/* ============================================================
+   B. 主题切换(记忆用户选择;首次访问跟随系统偏好)
+   ============================================================ */
+(function theme(){
+  const root = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const KEY = 'wenyihang-theme';
+
+  // 优先读本地记忆,否则看系统设置
+  let saved = null;
+  try { saved = localStorage.getItem(KEY); } catch(e){}
+
+  if(saved === 'light' || saved === 'dark'){
+    root.setAttribute('data-theme', saved);
+  }else if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+    root.setAttribute('data-theme', 'dark');
+  }
+
+  btn.addEventListener('click', function(){
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem(KEY, next); } catch(e){}
+  });
+})();
+
+/* ============================================================
+   C. 滚动进场动画
+   ---
+   注:原先这里还有一段"技能条增长"逻辑,因为技能区已改成
+   三组能力清单(不再使用百分比进度条),那段代码已移除。
+   若以后想加回进度条,给元素加 class="bar-fill" 和 data-val="85"
+   即可在原位置恢复对应逻辑。
+   ============================================================ */
+(function revealOnScroll(){
+  const items = document.querySelectorAll('.reveal');
+
+  // 不支持 IntersectionObserver 的老浏览器:直接全部显示
+  if(!('IntersectionObserver' in window)){
+    items.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+
+  const io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(!entry.isIntersecting) return;
+      entry.target.classList.add('in');
+      io.unobserve(entry.target);   // 只播一次
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  items.forEach(el => io.observe(el));
+})();
+
+/* ============================================================
+   D. 导航:滚动加边框 / 高亮当前区块 / 移动端菜单 / 进度条
+   ============================================================ */
+(function navigation(){
+  const nav = document.getElementById('nav');
+  const links = Array.from(document.querySelectorAll('.nav-links a'));
+  const progress = document.getElementById('progress');
+  const toTop = document.getElementById('toTop');
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+
+  // 点击链接后自动收起移动端菜单
+  links.forEach(function(a){
+    a.addEventListener('click', function(){ navLinks.classList.remove('open'); menuBtn.classList.remove('open'); });
+  });
+  menuBtn.addEventListener('click', function(){
+    navLinks.classList.toggle('open');
+    menuBtn.classList.toggle('open');
+  });
+
+  const sections = links
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  function onScroll(){
+    const y = window.scrollY;
+
+    nav.classList.toggle('scrolled', y > 12);
+    toTop.classList.toggle('show', y > 420);
+
+    // 顶部进度条
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (h > 0 ? (y / h) * 100 : 0) + '%';
+
+    // 高亮当前所在区块
+    let current = '';
+    sections.forEach(function(sec){
+      if(y >= sec.offsetTop - 130) current = '#' + sec.id;
+    });
+    links.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === current);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toTop.addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+/* 页脚年份自动更新 */
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
