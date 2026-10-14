@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>文一行 · 个人主页 | 网络工程(国际学院)</title>
-<meta name="description" content="文一行 - 网络工程(国际学院)学生,蓝桥杯备赛中,Java 俱乐部申请自我介绍。">
+<title>文一行 · 个人主页 | 武汉科技大学 · 网络工程(国际学院)</title>
+<meta name="description" content="文一行 - 武汉科技大学网络工程(国际学院)学生,蓝桥杯备赛中,Java 俱乐部申请自我介绍。">
 <style>
 /* ============================================================
    1. 设计令牌(CSS 变量)—— 主题切换的核心
@@ -457,7 +457,11 @@ html[data-theme="dark"] .tl-date{color:var(--teal);}
 /* ============================================================
    9. 联系
    ============================================================ */
-.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;}
+/* 联系卡片:桌面固定 2×2,窄屏自动变 1 列 */
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+@media (max-width:600px){
+  .contact-grid{grid-template-columns:1fr;}
+}
 .contact-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:22px;display:flex;align-items:center;gap:14px;
@@ -595,7 +599,7 @@ footer .mono{font-size:12.5px;color:var(--text-mute);opacity:.85;}
         </div>
 
         <p class="hero-desc">
-          网络工程专业(国际学院)在读,目前以 <strong>C++</strong> 为主要编程语言。
+          武汉科技大学 网络工程专业(国际学院)在读,目前以 <strong>C++</strong> 为主要编程语言。
           一边为首次蓝桥杯训练算法与数据结构,一边在李鹏老师指导下
           参与工创赛(虚拟仿真 · 智能网联汽车设计),同时开始认真学 <strong>Java</strong>。
         </p>
@@ -654,7 +658,7 @@ footer .mono{font-size:12.5px;color:var(--text-mute);opacity:.85;}
     <div class="about-grid">
       <div class="about-text reveal">
         <p>
-          我是<strong>文一行</strong>,网络工程专业(国际学院)的学生。
+          我是<strong>文一行</strong>,武汉科技大学网络工程专业(国际学院)的学生。
           目前我的主要编程语言是 <strong>C++</strong>,算法和数据结构的训练也围绕它展开 ——
           从最基础的 <span class="mono">vector</span> 用法,到排序、前缀和、二分、动态规划,
           都是一题一题做过来的。
@@ -681,6 +685,13 @@ footer .mono{font-size:12.5px;color:var(--text-mute);opacity:.85;}
       </div>
 
       <div class="facts reveal">
+        <div class="fact">
+          <div class="fact-ico">🏫</div>
+          <div>
+            <div class="fact-k">学校</div>
+            <div class="fact-v">武汉科技大学</div>
+          </div>
+        </div>
         <div class="fact">
           <div class="fact-ico">🎓</div>
           <div>
@@ -1034,7 +1045,7 @@ footer .mono{font-size:12.5px;color:var(--text-mute);opacity:.85;}
 <!-- ===================== 页脚 ===================== -->
 <footer>
   <div class="wrap">
-    <p>文一行 · 网络工程(国际学院) · 国际网工 2501 班 · 申请 Java 俱乐部</p>
+    <p>文一行 · 武汉科技大学 · 网络工程(国际学院) · 国际网工 2501 班 · 申请 Java 俱乐部</p>
     <p class="mono" style="margin-top:6px;">&lt;/&gt; Built with HTML · CSS · JavaScript &nbsp;|&nbsp; © <span id="year"></span></p>
   </div>
 </footer>
